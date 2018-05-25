@@ -4,7 +4,7 @@ import { FileChooser } from '@ionic-native/file-chooser';
 import { StatusBar } from '@ionic-native/status-bar';
 import { FilePath } from '@ionic-native/file-path';
 import { Media, MediaObject } from '@ionic-native/media';
-// import { File, IFile, Entry } from '@ionic-native/file';
+import { File } from '@ionic-native/file';
 
 @Component({
   selector: 'page-home',
@@ -18,7 +18,7 @@ export class HomePage {
     private statusBar: StatusBar,
     private filePath: FilePath,
     private media: Media,
-    // private file: File
+    private file: File
   ) {
 
   }
@@ -37,6 +37,10 @@ export class HomePage {
         this.fileChooser.open().then((url) => {
           this.filePath.resolveNativePath(url)
             .then((result) => {
+              this.file.resolveLocalFilesystemUrl(result)
+                .then(res => {
+                  console.log(JSON.stringify(res))
+                })
               result = result.replace(/file:\/\//g, '')
               this._mediaPath = result;
               console.log(result);
@@ -52,22 +56,23 @@ export class HomePage {
       this.Msg = "Please Select audio file"
       return;
     }
+
     this.mediaObj = this.media.create(this._mediaPath);
-    
+
     this.mediaObj.play();
     this.mediaObj.setVolume(1)
     // this.setupMediaTimerProgressbar()
     // get current playback position
     this.mediaObj.getCurrentPosition().then((position) => {
-      console.log('*** current position ***',position);
+      console.log('*** current position ***', position);
     });
 
     // get file duration
     let duration = this.mediaObj.getDuration();
-    console.log('=== file duration ===',duration);
+    console.log('=== file duration ===', duration);
     console.log(this._mediaPath)
 
-    this.Msg="Media Playing"
+    this.Msg = "Media Playing"
   }
 
 }
