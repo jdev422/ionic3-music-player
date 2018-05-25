@@ -11,4 +11,10 @@
     <ion-icon name="md-arrow-round-up"></ion-icon>
     Load Audio
   </button>
+  {{_mediaPath}}
+  <button (click)="playMedia()" class="btn-play " ion-button color="danger" outline block>
+    <ion-icon class="audio-control" name="ios-play"></ion-icon>
+    <ion-icon [hidden]="true" class="audio-control" name="ios-pause"></ion-icon>
+  </button>
+  {{Msg}}
 </ion-content>

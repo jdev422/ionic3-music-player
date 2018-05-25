@@ -5,6 +5,8 @@ import { SplashScreen } from '@ionic-native/splash-screen';
 import { StatusBar } from '@ionic-native/status-bar';
 import { FileChooser } from '@ionic-native/file-chooser';
 import { File } from '@ionic-native/file';
+import { FilePath } from '@ionic-native/file-path';
+import { Media } from '@ionic-native/media';
 
 import { MyApp } from './app.component';
 import { HomePage } from '../pages/home/home';
@@ -26,8 +28,10 @@ import { HomePage } from '../pages/home/home';
   providers: [
     StatusBar,
     SplashScreen,
+    Media,
     File,    
     FileChooser,
+    FilePath,
     {provide: ErrorHandler, useClass: IonicErrorHandler}
   ]
 })
