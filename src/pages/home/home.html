@@ -7,14 +7,14 @@
 </ion-header>
 
 <ion-content padding>
-  <button (click)="openFile()" ion-button icon-left block color="light" class="color-red"  block>
+  <button (click)="openFile()" ion-button icon-left block color="light" class="color-red" block>
     <ion-icon name="md-arrow-round-up"></ion-icon>
     Load Audio
   </button>
-  {{_mediaPath}}
+  <ion-range *ngIf="isLoad"  min="0.01" max="{{duration}}" [(ngModel)]="currentPoint" (ionBlur)="setPoint()" color="secondary" pin="true"></ion-range>
   <button (click)="playMedia()" class="btn-play " ion-button color="danger" outline block>
-    <ion-icon class="audio-control" name="ios-play"></ion-icon>
-    <ion-icon [hidden]="true" class="audio-control" name="ios-pause"></ion-icon>
+    <ion-icon *ngIf="!isplaying" class="audio-control" name="ios-play"></ion-icon>
+    <ion-icon *ngIf="isplaying" class="audio-control" name="ios-pause"></ion-icon>
   </button>
-  {{Msg}}
+  {{Msg}}{{currentPoint}}
 </ion-content>
