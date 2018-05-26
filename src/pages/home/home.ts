@@ -4,7 +4,7 @@ import { FileChooser } from '@ionic-native/file-chooser';
 import { StatusBar } from '@ionic-native/status-bar';
 import { FilePath } from '@ionic-native/file-path';
 import { Media, MediaObject } from '@ionic-native/media';
-// import { File } from '@ionic-native/file';
+import { File } from '@ionic-native/file';
 
 @Component({
   selector: 'page-home',
@@ -19,20 +19,35 @@ export class HomePage {
   isLoad: boolean;
   currentPoint: any;
   duration: string;
+  fileList: any;
+  fileName: string;
   constructor(
     public navCtrl: NavController,
     private fileChooser: FileChooser,
     private statusBar: StatusBar,
     private filePath: FilePath,
     private media: Media,
-    // private file: File
+    private file: File
   ) {
     this.isplaying = false;
-    // this.currentPoint = 0;
     this.isLoad = false;
     this.duration = '0';
   }
+  async ngOnInit() {
+    let listDir = await this.file.listDir('file:///storage/emulated/0/', 'Download');
+    let files = [];
+    for (let list of listDir) {
+      if (!list.isDirectory) {
+        var re = /(?:\.([^.]+))?$/;
+        var ext = re.exec(list.name)[1];
+        if (ext == 'mp3') {
+          files.push({ name: list.name, nativeURL: list.nativeURL })
+        }
+      }
+    }
+    this.fileList = files;
 
+  }
 
 
   initialsetting() {
@@ -41,13 +56,19 @@ export class HomePage {
   }
 
   async openFile() {
-    if (this.mediaObj) this.mediaObj.release();
 
     let uri = await this.fileChooser.open();
 
+    this.initMedia(uri);
+  }
+
+  async initMedia(uri) {
+
+    if (this.mediaObj) this.mediaObj.release();
+
     let url = await this.filePath.resolveNativePath(uri);
 
-    // let fileInfo = await this.file.resolveLocalFilesystemUrl(url);
+    let fileInfo = await this.file.resolveLocalFilesystemUrl(url);
 
     this._mediaPath = url.replace(/file:\/\//g, '');
 
@@ -57,6 +78,10 @@ export class HomePage {
 
     this.mediaObj.setVolume(1);
 
+    this.currentPoint = 0;
+
+    this.fileName = fileInfo.name;
+    
     setTimeout(() => {
       this.duration = Math.round(this.mediaObj.getDuration()).toString();
       console.log(this.duration)
@@ -70,7 +95,6 @@ export class HomePage {
     this.isplaying = true;
 
     this.isLoad = true;
-
   }
 
   playMedia() {
@@ -108,5 +132,9 @@ export class HomePage {
     if (this.currentPoint > this.duration) {
       this.currentPoint = this.duration;
     }
+  }
+
+  listClick(i) {
+    this.initMedia(this.fileList[i].nativeURL)
   }
 }

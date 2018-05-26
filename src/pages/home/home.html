@@ -2,19 +2,38 @@
   <ion-navbar>
     <ion-title>
       Media Player
+      <marquee direction="left" speed="normal" behavior="loop">{{fileName}}</marquee>
+    
     </ion-title>
   </ion-navbar>
 </ion-header>
 
 <ion-content padding>
-  <button (click)="openFile()" ion-button icon-left block color="light" class="color-red" block>
-    <ion-icon name="md-arrow-round-up"></ion-icon>
-    Load Audio
-  </button>
-  <ion-range *ngIf="isLoad"  min="0.01" max="{{duration}}" [(ngModel)]="currentPoint" (ionBlur)="setPoint()" color="secondary" pin="true"></ion-range>
-  <button (click)="playMedia()" class="btn-play " ion-button color="danger" outline block>
-    <ion-icon *ngIf="!isplaying" class="audio-control" name="ios-play"></ion-icon>
-    <ion-icon *ngIf="isplaying" class="audio-control" name="ios-pause"></ion-icon>
-  </button>
-  {{Msg}}{{currentPoint}}
+  <ion-list>
+    <ion-item *ngFor="let file of fileList ; let i = index" (click)="listClick(i)">
+      <ion-avatar item-start>
+        <img src="../../assets/imgs/audio.jpeg">
+      </ion-avatar>
+      <h3>{{file.name}}</h3>
+    </ion-item>
+  </ion-list>
 </ion-content>
+<ion-footer>
+  <ion-row>
+    <ion-col col-2>
+      <button (click)="openFile()" ion-button icon-left block color="light" class="color-red" block>
+        <ion-icon name="md-arrow-round-up"></ion-icon>
+      </button>
+    </ion-col>
+    <ion-col col-8>
+      <ion-range *ngIf="isLoad" class="media-status" min="0.01" max="{{duration}}" [(ngModel)]="currentPoint" (ionBlur)="setPoint()"
+        color="secondary" pin="true"></ion-range>
+    </ion-col>
+    <ion-col col-2>
+      <button (click)="playMedia()" class="btn-play " ion-button [color]="isplaying ? 'secondary' : ''" block>
+        <ion-icon *ngIf="!isplaying" class="audio-control" name="ios-play"></ion-icon>
+        <ion-icon *ngIf="isplaying" class="audio-control" name="ios-pause"></ion-icon>
+      </button>
+    </ion-col>
+  </ion-row>
+</ion-footer>
